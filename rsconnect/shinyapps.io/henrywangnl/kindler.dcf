@@ -1,0 +1,12 @@
+name: kindler
+title: kindler
+username:
+account: henrywangnl
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3205597
+bundleId: 3844772
+url: https://henrywangnl.shinyapps.io/kindler/
+when: 1605044381.7411
+asMultiple: FALSE
+asStatic: FALSE
