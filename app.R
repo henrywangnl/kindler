@@ -31,7 +31,8 @@ ui <- fluidPage(
   
   # App title
   titlePanel(
-    h3("Kindle Vocabulary Builder Export For Free", align = "center")
+    h3("Kindle Vocabulary Builder Export For Free", align = "center"),
+    windowTitle = "Kindle Vocabulary Builder Export For Free"
   ),
     
   # panel for uploads
