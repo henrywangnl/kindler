@@ -5,35 +5,64 @@ library(writexl)
 
 
 
-# Define UI for data upload app ----
-
+# Define UI for data upload app
 
 ui <- fluidPage(
   
-  # App title ----
-  titlePanel("Uploading Your vocab.db file"),
+  tags$head(
+    tags$style(HTML("
+      h3 {
+        color: #48ca3b
+      }
+      
+      .shiny-input-container {
+        padding-top: 30px
+      }
+      
+      .col-sm-offset-4 {
+        padding-bottom: 5px
+      }
+      
+      label {
+        font-weight: 400
+      }
+    "))
+  ),
   
-  # Sidebar layout with input and output definitions ----
-  sidebarLayout(
+  # App title
+  titlePanel(
+    h3("Kindle Vocabulary Builder Export For Free", align = "center")
+  ),
     
-    # Sidebar panel for inputs ----
-    sidebarPanel(
-      
-      # Input: Select a file ----
-      fileInput("file1", "Choose vocab.db File",
-                buttonLabel = "Upload...",
-                multiple = FALSE,
-                accept = c(".db"))
+  # panel for uploads
+  fluidRow(
+     column(
+       width = 4,
+       offset = 4,
+       # Input: Select a file
+       fileInput("file", "Step 1: Upload your vocab.db file:",
+                 buttonLabel = "Upload...",
+                 multiple = FALSE,
+                 accept = c(".db"))
+     ) 
     ),
-    
-    # Main panel for displaying outputs ----
-    mainPanel(
-      
-      # Download button
-      downloadButton("downloadData", "Download")
-      
+  
+  fluidRow(
+    column(
+      width = 4,
+      offset = 4,
+      "Step 2: Export to an Excel file:"
     )
+  ),
     
+  # panel for downloads
+  fluidRow(
+    column(
+      width = 4,
+      offset = 4,
+      # Download button
+      downloadButton("downloadData", "Download") 
+    )
   )
 )
 
@@ -41,21 +70,19 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   
-  # input$file1 will be NULL initially. After the user selects
-  # and uploads a file, head of that data file by default,
-  # or all rows if selected, will be shown.
+  # input$file will be NULL initially. 
   
-  data <- eventReactive(input$file1, {
+  data <- eventReactive(input$file, {
     
     
     
-    db <- dbConnect(drv = dbDriver("SQLite"), dbname = input$file1$datapath)
+    db <- dbConnect(drv = dbDriver("SQLite"), dbname = input$file$datapath)
     
     
     book_info <- dbReadTable(db, "BOOK_INFO")
-    dict_info <- dbReadTable(db, "DICT_INFO")
+    # dict_info <- dbReadTable(db, "DICT_INFO")
     lookups <- dbReadTable(db, "LOOKUPS")
-    metadata <- dbReadTable(db, "METADATA")
+    # metadata <- dbReadTable(db, "METADATA")
     version <- dbReadTable(db, "VERSION")
     words <- dbReadTable(db, "WORDS")
     
@@ -74,9 +101,11 @@ server <- function(input, output, session) {
   
   
   output$downloadData <- downloadHandler(
+    
     filename = function() {
       paste("vocab-", Sys.Date(), ".xlsx", sep="")
     },
+    
     content = function(file) {
       write_xlsx(data(), file)
     }
