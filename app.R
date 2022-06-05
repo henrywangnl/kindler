@@ -3,6 +3,8 @@ library(shiny)
 library(RSQLite)
 library(writexl)
 
+# increase the maximum file size to 100 MB
+options(shiny.maxRequestSize = 100 * 1024^2)
 
 
 # Define UI for data upload app
